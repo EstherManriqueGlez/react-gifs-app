@@ -3,7 +3,6 @@ import { useRef, useState } from 'react';
 import { getGifsByQuery } from '../actions/get-gifs-by-query.action';
 import type { Gif } from '../interfaces/gif.interface';
 
-
 // This is one way to cache gifs in memory during the app's lifecycle
 // const gifsCache: Record<string, Gif[]> = {};
 
@@ -23,6 +22,7 @@ export const useGifs = () => {
     const gifs = await getGifsByQuery(term);
 
     setGifs(gifs);
+    gifsCache.current[term] = gifs;
   };
 
   const handleSearch = async (query: string = '') => {
@@ -39,7 +39,7 @@ export const useGifs = () => {
     setGifs(gifs);
 
     gifsCache.current[query] = gifs;
-    console.log(gifsCache);
+    // console.log(gifsCache);
   };
   return {
     // Values or Properties
