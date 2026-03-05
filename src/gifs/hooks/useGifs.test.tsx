@@ -44,7 +44,7 @@ describe('useGifs Hook', () => {
     expect(result.current.gifs.length).toBe(10);
 
     vi.spyOn(gifActions, 'getGifsByQuery').mockRejectedValue(
-      new Error('This is my custom error')
+      new Error('This is my custom error'),
     );
 
     await act(async () => {
