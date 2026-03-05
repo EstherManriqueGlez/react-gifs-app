@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
 
 import { SearchBar } from './SearchBar';
@@ -12,21 +12,18 @@ describe('SearchBar', () => {
     expect(screen.getByRole('button')).toBeDefined();
   });
 
-  test('should call onQuery with the correct value after 700ms', async () => {
+  test('should call onQuery with the correct value after 1000ms', async () => {
     const onQuery = vi.fn();
     render(<SearchBar onQuery={onQuery} />);
 
     const input = screen.getByRole('textbox');
     fireEvent.change(input, { target: { value: 'test' } });
 
-    // This is one way to do it and wait for the debounce timeout
-    // await new Promise((r) => setTimeout(r, 700));
-
-    // This is another way using fake timers
-    await waitFor(() => {
-      expect(onQuery).toHaveBeenCalled();
-      expect(onQuery).toHaveBeenCalledWith('test');
-    });
+    await new Promise((resolve) => setTimeout(resolve, 1001));
+    // await waitFor(() => {
+    expect(onQuery).toHaveBeenCalled();
+    expect(onQuery).toHaveBeenCalledWith('test');
+    // });
   });
 
   test('should call only once with the last value (debounce)', async () => {
@@ -39,10 +36,12 @@ describe('SearchBar', () => {
     fireEvent.change(input, { target: { value: 'tes' } });
     fireEvent.change(input, { target: { value: 'test' } });
 
-    await waitFor(() => {
-      expect(onQuery).toHaveBeenCalledTimes(1);
-      expect(onQuery).toHaveBeenCalledWith('test');
-    });
+    await new Promise((resolve) => setTimeout(resolve, 1001));
+
+    // await waitFor(() => {
+    expect(onQuery).toHaveBeenCalledTimes(1);
+    expect(onQuery).toHaveBeenCalledWith('test');
+    // });
   });
 
   test('should call onQuery when button clicked with the input value', () => {
@@ -63,8 +62,19 @@ describe('SearchBar', () => {
     const placeholder = 'Custom Placeholder';
     render(<SearchBar onQuery={() => {}} placeholder={placeholder} />);
 
-
     screen.debug();
     expect(screen.getByPlaceholderText(placeholder)).toBeDefined();
+  });
+
+  test('should call onQuery when Enter key is pressed with the input value', () => {
+    const onQuery = vi.fn();
+    render(<SearchBar onQuery={onQuery} />);
+
+    const input = screen.getByRole('textbox');
+    fireEvent.change(input, { target: { value: 'test' } });
+    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
+
+    expect(onQuery).toHaveBeenCalledTimes(1);
+    expect(onQuery).toHaveBeenCalledWith('test');
   });
 });
