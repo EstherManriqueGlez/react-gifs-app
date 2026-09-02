@@ -6,7 +6,7 @@ describe('MyCounterApp', () => {
   test('should render correctly', () => {
     render(<MyCounterApp />);
 
-    screen.debug();
+    // screen.debug();
     expect(screen.getByRole('heading', { level: 1 }).innerHTML).toContain(
       `Counter: 10`
     );
@@ -30,9 +30,9 @@ describe('MyCounterApp', () => {
     render(<MyCounterApp />);
 
     const labelH1 = screen.getByRole('heading', { level: 1 });
-    const btnAdd = screen.getByRole('button', { name: '-1' });
+    const btnDec = screen.getByRole('button', { name: '-1' });
 
-    fireEvent.click(btnAdd);
+    fireEvent.click(btnDec);
     expect(labelH1.innerHTML).toContain('Counter: 9');
   });
 });
