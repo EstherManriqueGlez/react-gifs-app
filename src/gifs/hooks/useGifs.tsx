@@ -1,50 +1,94 @@
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { getGifsByQuery } from '../actions/get-gifs-by-query.action';
 import type { Gif } from '../interfaces/gif.interface';
-
-// This is one way to cache gifs in memory during the app's lifecycle
-// const gifsCache: Record<string, Gif[]> = {};
+import {
+  loadPreviousTerms,
+  savePreviousTerms,
+  MAX_PREVIOUS_TERMS,
+} from '../utils/previous-searches';
 
 export const useGifs = () => {
   const [gifs, setGifs] = useState<Gif[]>([]);
-  const [previousTerms, setPreviousTerms] = useState<string[]>([]);
+  const [previousTerms, setPreviousTerms] = useState<string[]>(loadPreviousTerms);
+  const [currentTerm, setCurrentTerm] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // This is another way to cache gifs in memory during the app's lifecycle
+  // In-memory cache of GIFs keyed by search term.
   const gifsCache = useRef<Record<string, Gif[]>>({});
+  // Monotonic id used to ignore stale (out-of-order) responses.
+  const requestId = useRef(0);
 
-  const handleTermClicked = async (term: string) => {
-    if (gifsCache.current[term]) {
-      setGifs(gifsCache.current[term]);
+  useEffect(() => {
+    savePreviousTerms(previousTerms);
+  }, [previousTerms]);
+
+  const search = useCallback(async (term: string) => {
+    const query = term.toLowerCase().trim();
+
+    if (query.length === 0) return;
+
+    const id = ++requestId.current;
+    setCurrentTerm(query);
+    setError(null);
+
+    if (gifsCache.current[query]) {
+      setGifs(gifsCache.current[query]);
+      setIsLoading(false);
       return;
     }
 
-    const gifs = await getGifsByQuery(term);
+    setIsLoading(true);
 
-    setGifs(gifs);
-    gifsCache.current[term] = gifs;
-  };
+    try {
+      const result = await getGifsByQuery(query);
 
-  const handleSearch = async (query: string = '') => {
-    query = query.toLowerCase().trim();
+      // Discard the response if a newer search was requested meanwhile.
+      if (id !== requestId.current) return;
 
-    if (query.length === 0 || previousTerms.includes(query)) return;
+      gifsCache.current[query] = result;
+      setGifs(result);
+    } catch {
+      if (id !== requestId.current) return;
 
-    // if (previousTerms.includes(query)) return;
+      setGifs([]);
+      setError('Something went wrong while searching. Please try again.');
+    } finally {
+      if (id === requestId.current) setIsLoading(false);
+    }
+  }, []);
 
-    setPreviousTerms([query, ...previousTerms].splice(0, 8));
+  const handleSearch = useCallback(
+    (term: string) => {
+      const query = term.toLowerCase().trim();
 
-    const gifs = await getGifsByQuery(query);
+      if (query.length === 0) return;
 
-    setGifs(gifs);
+      setPreviousTerms((prev) =>
+        prev.includes(query) ? prev : [query, ...prev].slice(0, MAX_PREVIOUS_TERMS),
+      );
 
-    gifsCache.current[query] = gifs;
-    // console.log(gifsCache);
-  };
+      void search(query);
+    },
+    [search],
+  );
+
+  const handleTermClicked = useCallback(
+    (term: string) => {
+      void search(term);
+    },
+    [search],
+  );
+
   return {
     // Values or Properties
     gifs,
     previousTerms,
+    currentTerm,
+    isLoading,
+    error,
+
     // Methods or Functions
     handleTermClicked,
     handleSearch,

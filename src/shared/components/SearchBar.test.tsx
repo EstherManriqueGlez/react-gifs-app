@@ -12,21 +12,7 @@ describe('SearchBar', () => {
     expect(screen.getByRole('button')).toBeDefined();
   });
 
-  test('should call onQuery with the correct value after 1000ms', async () => {
-    const onQuery = vi.fn();
-    render(<SearchBar onQuery={onQuery} />);
-
-    const input = screen.getByRole('textbox');
-    fireEvent.change(input, { target: { value: 'test' } });
-
-    await new Promise((resolve) => setTimeout(resolve, 1001));
-    // await waitFor(() => {
-    expect(onQuery).toHaveBeenCalled();
-    expect(onQuery).toHaveBeenCalledWith('test');
-    // });
-  });
-
-  test('should call only once with the last value (debounce)', async () => {
+  test('should NOT trigger onQuery while typing', () => {
     const onQuery = vi.fn();
     render(<SearchBar onQuery={onQuery} />);
 
@@ -36,15 +22,10 @@ describe('SearchBar', () => {
     fireEvent.change(input, { target: { value: 'tes' } });
     fireEvent.change(input, { target: { value: 'test' } });
 
-    await new Promise((resolve) => setTimeout(resolve, 1001));
-
-    // await waitFor(() => {
-    expect(onQuery).toHaveBeenCalledTimes(1);
-    expect(onQuery).toHaveBeenCalledWith('test');
-    // });
+    expect(onQuery).not.toHaveBeenCalled();
   });
 
-  test('should call onQuery when button clicked with the input value', () => {
+  test('should call onQuery when button clicked with the input value and clear it', () => {
     const onQuery = vi.fn();
     render(<SearchBar onQuery={onQuery} />);
 
@@ -56,17 +37,10 @@ describe('SearchBar', () => {
 
     expect(onQuery).toHaveBeenCalledTimes(1);
     expect(onQuery).toHaveBeenCalledWith('test');
+    expect((input as HTMLInputElement).value).toBe('');
   });
 
-  test('should the input has the correct placeholder value', () => {
-    const placeholder = 'Custom Placeholder';
-    render(<SearchBar onQuery={() => {}} placeholder={placeholder} />);
-
-    screen.debug();
-    expect(screen.getByPlaceholderText(placeholder)).toBeDefined();
-  });
-
-  test('should call onQuery when Enter key is pressed with the input value', () => {
+  test('should call onQuery when Enter key is pressed and clear the input', () => {
     const onQuery = vi.fn();
     render(<SearchBar onQuery={onQuery} />);
 
@@ -76,5 +50,30 @@ describe('SearchBar', () => {
 
     expect(onQuery).toHaveBeenCalledTimes(1);
     expect(onQuery).toHaveBeenCalledWith('test');
+    expect((input as HTMLInputElement).value).toBe('');
+  });
+
+  test('should trim the submitted value and ignore whitespace-only input', () => {
+    const onQuery = vi.fn();
+    render(<SearchBar onQuery={onQuery} />);
+
+    const input = screen.getByRole('textbox');
+    fireEvent.change(input, { target: { value: '  goku  ' } });
+    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
+
+    expect(onQuery).toHaveBeenCalledTimes(1);
+    expect(onQuery).toHaveBeenCalledWith('goku');
+
+    fireEvent.change(input, { target: { value: '   ' } });
+    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
+
+    expect(onQuery).toHaveBeenCalledTimes(1);
+  });
+
+  test('should the input has the correct placeholder value', () => {
+    const placeholder = 'Custom Placeholder';
+    render(<SearchBar onQuery={() => {}} placeholder={placeholder} />);
+
+    expect(screen.getByPlaceholderText(placeholder)).toBeDefined();
   });
 });
