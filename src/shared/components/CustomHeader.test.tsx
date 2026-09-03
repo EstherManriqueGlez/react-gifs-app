@@ -9,7 +9,8 @@ describe('CustomHeader', () => {
   test('should render the title correctly', () => {
     render(<CustomHeader title={title} />);
 
-    expect(screen.getAllByText(title)).toBeDefined();
+    const heading = screen.getByRole('heading', { level: 1 });
+    expect(heading.textContent).toBe(title);
   });
 
   test('should render the description when provided', () => {
@@ -27,7 +28,7 @@ describe('CustomHeader', () => {
 
     const h1Element = divElement?.querySelector('h1');
     expect(h1Element).toBeDefined();
-    expect(h1Element?.innerHTML).toBe(title);
+    expect(h1Element?.textContent).toBe(title);
     expect(divElement?.querySelector('p')).toBeNull();
   });
 });
