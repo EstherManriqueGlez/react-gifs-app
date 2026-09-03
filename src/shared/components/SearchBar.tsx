@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 interface Props {
   placeholder?: string;
@@ -8,24 +8,23 @@ interface Props {
 export const SearchBar = ({ placeholder = 'Search...', onQuery }: Props) => {
   const [query, setQuery] = useState('');
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      onQuery(query);
-    }, 1000);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [query, onQuery]);
-
-  const handleSearch = () => {
-    onQuery(query);
-    // setQuery('');
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(event.target.value);
   };
+
+  const handleSubmit = useCallback(() => {
+    const trimmed = query.trim();
+
+    if (trimmed.length === 0) return;
+
+    onQuery(trimmed);
+    setQuery('');
+  }, [query, onQuery]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      handleSearch();
+      event.preventDefault();
+      handleSubmit();
     }
   };
 
@@ -35,10 +34,10 @@ export const SearchBar = ({ placeholder = 'Search...', onQuery }: Props) => {
         type="text"
         placeholder={placeholder}
         value={query}
-        onChange={(event) => setQuery(event.target.value)}
+        onChange={handleChange}
         onKeyDown={handleKeyDown}
       />
-      <button className="search-button" onClick={handleSearch}>
+      <button className="search-button" onClick={handleSubmit}>
         Search
       </button>
     </div>
