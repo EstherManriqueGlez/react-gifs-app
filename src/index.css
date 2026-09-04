@@ -606,6 +606,53 @@ img.loaded {
   transform: rotate(90deg);
 }
 
+.modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.modal-action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: var(--radius-full);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform var(--transition), background var(--transition), filter var(--transition);
+}
+
+.modal-action-button:hover {
+  transform: translateY(-1px);
+}
+
+.modal-action-button--primary {
+  border: none;
+  background: var(--gradient-accent);
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(139, 92, 246, 0.4);
+}
+
+.modal-action-button--primary:hover {
+  filter: brightness(1.08);
+}
+
+.modal-action-button--secondary {
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  color: var(--text);
+}
+
+.modal-action-button--secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;

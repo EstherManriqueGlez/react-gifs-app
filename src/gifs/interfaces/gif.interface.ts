@@ -3,6 +3,7 @@ export interface Gif {
   title: string;
   url: string;
   previewUrl?: string;
+  giphyUrl?: string;
   width: number;
   height: number;
 }
