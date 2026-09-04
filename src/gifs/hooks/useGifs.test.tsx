@@ -46,7 +46,8 @@ describe('useGifs Hook', () => {
     const { result } = renderHook(() => useGifs());
 
     await act(async () => {
-      await result.current.handleSearch('Goku');
+      result.current.handleSearch('Goku');
+      await Promise.resolve();
     });
 
     expect(mockedGetGifsByQuery).toHaveBeenCalledWith('goku');
@@ -59,7 +60,8 @@ describe('useGifs Hook', () => {
     const { result } = renderHook(() => useGifs());
 
     await act(async () => {
-      await result.current.handleSearch('goku');
+      result.current.handleSearch('goku');
+      await Promise.resolve();
     });
 
     expect(result.current.previousTerms).toStrictEqual(['goku']);
@@ -69,10 +71,12 @@ describe('useGifs Hook', () => {
     const { result } = renderHook(() => useGifs());
 
     await act(async () => {
-      await result.current.handleSearch('goku');
+      result.current.handleSearch('goku');
+      await Promise.resolve();
     });
     await act(async () => {
-      await result.current.handleSearch('GOKU');
+      result.current.handleSearch('GOKU');
+      await Promise.resolve();
     });
 
     expect(result.current.previousTerms).toStrictEqual(['goku']);
@@ -82,10 +86,12 @@ describe('useGifs Hook', () => {
     const { result } = renderHook(() => useGifs());
 
     await act(async () => {
-      await result.current.handleSearch('');
+      result.current.handleSearch('');
+      await Promise.resolve();
     });
     await act(async () => {
-      await result.current.handleSearch('   ');
+      result.current.handleSearch('   ');
+      await Promise.resolve();
     });
 
     expect(mockedGetGifsByQuery).not.toHaveBeenCalled();
@@ -96,13 +102,15 @@ describe('useGifs Hook', () => {
     const { result } = renderHook(() => useGifs());
 
     await act(async () => {
-      await result.current.handleSearch('goku');
+      result.current.handleSearch('goku');
+      await Promise.resolve();
     });
 
     mockedGetGifsByQuery.mockClear();
 
     await act(async () => {
-      await result.current.handleTermClicked('goku');
+      result.current.handleTermClicked('goku');
+      await Promise.resolve();
     });
 
     expect(result.current.gifs.length).toBe(10);
@@ -113,7 +121,8 @@ describe('useGifs Hook', () => {
     const { result } = renderHook(() => useGifs());
 
     await act(async () => {
-      await result.current.handleSearch('goku');
+      result.current.handleSearch('goku');
+      await Promise.resolve();
     });
 
     const firstCalls = mockedGetGifsByQuery.mock.calls.length;
@@ -121,7 +130,8 @@ describe('useGifs Hook', () => {
     mockedGetGifsByQuery.mockRejectedValueOnce(new Error('should not be called'));
 
     await act(async () => {
-      await result.current.handleTermClicked('goku');
+      result.current.handleTermClicked('goku');
+      await Promise.resolve();
     });
 
     expect(mockedGetGifsByQuery.mock.calls.length).toBe(firstCalls);
@@ -133,7 +143,8 @@ describe('useGifs Hook', () => {
 
     for (let i = 1; i <= 9; i++) {
       await act(async () => {
-        await result.current.handleSearch(`goku${i}`);
+        result.current.handleSearch(`goku${i}`);
+        await Promise.resolve();
       });
     }
 
@@ -156,7 +167,8 @@ describe('useGifs Hook', () => {
     const { result } = renderHook(() => useGifs());
 
     await act(async () => {
-      await result.current.handleSearch('goku');
+      result.current.handleSearch('goku');
+      await Promise.resolve();
     });
 
     expect(result.current.error).toBe('Something went wrong while searching. Please try again.');
@@ -226,7 +238,8 @@ describe('useGifs Hook', () => {
     const { result } = renderHook(() => useGifs());
 
     await act(async () => {
-      await result.current.handleSearch('goku');
+      result.current.handleSearch('goku');
+      await Promise.resolve();
     });
 
     const saved = JSON.parse(

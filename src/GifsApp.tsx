@@ -26,6 +26,16 @@ export const GifsApp = () => {
 
   const hasSearched = currentTerm.length > 0;
 
+  const statusText = (() => {
+    if (error) return `Search failed: ${error}`;
+    if (isLoading && hasSearched) return `Loading GIFs for "${currentTerm}"`;
+    if (hasSearched && gifs.length > 0) {
+      return `Found ${gifs.length} ${gifs.length === 1 ? 'GIF' : 'GIFs'} for "${currentTerm}"`;
+    }
+    if (hasSearched) return `No GIFs found for "${currentTerm}"`;
+    return 'Search for GIFs to get started.';
+  })();
+
   const renderResults = () => {
     if (isLoading) {
       return <GifGridSkeleton />;
@@ -49,14 +59,22 @@ export const GifsApp = () => {
         description="Discover and share the perfect Gifs"
       />
 
-      <SearchBar
-        placeholder="Search for gifs..."
-        onQuery={(query: string) => handleSearch(query)}
-      />
+      <main className="app-main">
+        <SearchBar
+          placeholder="Search for gifs..."
+          onQuery={(query: string) => handleSearch(query)}
+        />
 
-      <PreviousSearches searches={previousTerms} onLabelClicked={handleTermClicked} />
+        <PreviousSearches searches={previousTerms} onLabelClicked={handleTermClicked} />
 
-      {renderResults()}
+        <p className="visually-hidden" role="status">
+          {statusText}
+        </p>
+
+        <div className="results-region" aria-busy={isLoading}>
+          {renderResults()}
+        </div>
+      </main>
 
       <GifModal gif={selectedGif} onClose={() => setSelectedGif(null)} />
     </>

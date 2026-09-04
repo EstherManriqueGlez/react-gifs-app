@@ -3,7 +3,7 @@ import { giphyApi } from './giphy.api';
 
 describe('Giphy API', () => {
   test('should be configured correctly', () => {
-    const params = giphyApi.defaults.params;
+    const params = giphyApi.defaults.params as { api_key?: string; lang?: string };
 
     expect(giphyApi.defaults.baseURL).toBe('https://api.giphy.com/v1/gifs');
     expect(giphyApi.defaults.params).toHaveProperty('lang', 'en');
