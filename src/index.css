@@ -327,53 +327,86 @@ a {
 }
 
 /* ============================================================
-   Gifs grid (visual refinement in a later step)
+   Gifs grid & cards
    ============================================================ */
 .gifs-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
+  gap: 16px;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding-bottom: 60px;
+  padding-bottom: 72px;
 }
 
 .gif-card {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--bg-card);
-  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, var(--bg-card), var(--bg-elevated));
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
 }
 
-.gifs-container img {
+.gif-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-lg);
+}
+
+.gif-media {
+  position: relative;
   width: 100%;
-  height: 200px;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.gif-media img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: var(--radius-sm);
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.gif-media img.loaded {
+  opacity: 1;
+}
+
+.gif-card:hover .gif-media img {
+  transform: scale(1.04);
 }
 
 .gif-card h3 {
+  margin-top: 12px;
   font-size: 0.95rem;
   font-weight: 600;
-  text-align: center;
+  line-height: 1.3;
   color: var(--text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .gif-card p {
-  font-size: 0.8rem;
+  margin-top: 4px;
+  font-size: 0.78rem;
+  font-weight: 500;
   color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
 }
 
 @media (min-width: 768px) {
   .gifs-container {
     grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
+    gap: 20px;
   }
 }
 
@@ -386,6 +419,210 @@ a {
 @media (min-width: 1280px) {
   .gifs-container {
     grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* Image fade-in */
+img.loaded {
+  opacity: 1;
+}
+
+/* ============================================================
+   Skeleton loaders
+   ============================================================ */
+.gif-card--skeleton {
+  cursor: default;
+}
+
+.skeleton-block {
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0.05) 40%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.05) 60%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.gif-card--skeleton .gif-media {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: 6px;
+  margin-top: 12px;
+}
+
+.skeleton-line--title {
+  width: 80%;
+}
+
+.skeleton-line--meta {
+  width: 40%;
+  margin-top: 8px;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* ============================================================
+   Empty / error states
+   ============================================================ */
+.state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  max-width: 460px;
+  margin: 24px auto 72px;
+  padding: 48px 32px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+}
+
+.state-icon {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--accent-indigo);
+  margin-bottom: 6px;
+}
+
+.state-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.state-card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.state-button {
+  margin-top: 12px;
+  padding: 11px 24px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: var(--gradient-accent);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 8px 22px rgba(139, 92, 246, 0.4);
+  transition: transform var(--transition), filter var(--transition);
+}
+
+.state-button:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.state-card--error .state-icon {
+  background: rgba(236, 72, 153, 0.12);
+  color: var(--accent-pink);
+}
+
+/* ============================================================
+   Modal / lightbox
+   ============================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(5, 6, 12, 0.82);
+  backdrop-filter: blur(6px);
+  animation: fade-in 0.2s ease;
+}
+
+.modal-card {
+  position: relative;
+  max-width: 640px;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-lg);
+  animation: pop-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-card img {
+  width: 100%;
+  max-height: 60vh;
+  object-fit: contain;
+  border-radius: var(--radius);
+  background: #000;
+}
+
+.modal-card h3 {
+  margin-top: 14px;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.modal-card p {
+  margin-top: 4px;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg-glass);
+  color: var(--text);
+  transition: background var(--transition), transform var(--transition);
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: rotate(90deg);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }
 
