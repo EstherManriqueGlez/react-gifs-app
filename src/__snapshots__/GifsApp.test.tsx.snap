@@ -2,28 +2,110 @@
 
 exports[`GifsApp > should render component properly 1`] = `
 <div>
-  <div
-    class="content-center"
+  <header
+    class="app-header"
   >
-    <h1>
-      Gifs Search
-    </h1>
-    <p>
-      Discover and share the perfect Gifs
-    </p>
-  </div>
+    <nav
+      aria-label="Primary"
+      class="app-nav"
+    >
+      <a
+        class="app-brand"
+        href="#"
+      >
+        <span
+          aria-hidden="true"
+          class="app-brand-mark"
+        >
+          G
+        </span>
+        <span
+          class="app-brand-name"
+        >
+          Gifs
+          <span
+            class="app-brand-accent"
+          >
+            App
+          </span>
+        </span>
+      </a>
+    </nav>
+    <div
+      class="content-center"
+    >
+      <h1>
+        Gifs 
+        <span
+          class="accent"
+        >
+          Search
+        </span>
+      </h1>
+      <p>
+        Discover and share the perfect Gifs
+      </p>
+    </div>
+  </header>
   <div
     class="search-container"
+    role="search"
   >
+    <span
+      aria-hidden="true"
+      class="search-icon"
+    >
+      <svg
+        fill="none"
+        height="20"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="20"
+      >
+        <circle
+          cx="11"
+          cy="11"
+          r="8"
+        />
+        <line
+          x1="21"
+          x2="16.65"
+          y1="21"
+          y2="16.65"
+        />
+      </svg>
+    </span>
     <input
+      aria-label="Search for gifs"
       placeholder="Search for gifs..."
       type="text"
       value=""
     />
     <button
       class="search-button"
+      type="button"
     >
-      Search
+      <span>
+        Search
+      </span>
+      <svg
+        aria-hidden="true"
+        fill="none"
+        height="16"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="16"
+      >
+        <polyline
+          points="9 18 15 12 9 6"
+        />
+      </svg>
     </button>
   </div>
   <div
@@ -37,7 +119,42 @@ exports[`GifsApp > should render component properly 1`] = `
     />
   </div>
   <div
-    class="gifs-container"
-  />
+    class="state-card"
+    role="status"
+  >
+    <div
+      aria-hidden="true"
+      class="state-icon"
+    >
+      <svg
+        fill="none"
+        height="40"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.6"
+        viewBox="0 0 24 24"
+        width="40"
+      >
+        <circle
+          cx="11"
+          cy="11"
+          r="8"
+        />
+        <line
+          x1="21"
+          x2="16.65"
+          y1="21"
+          y2="16.65"
+        />
+      </svg>
+    </div>
+    <h3>
+      Start exploring
+    </h3>
+    <p>
+      Type a keyword and press Enter to discover the perfect GIFs.
+    </p>
+  </div>
 </div>
 `;

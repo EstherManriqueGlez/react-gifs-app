@@ -4,16 +4,63 @@ exports[`SearchBar > should render SearchBar correctly 1`] = `
 <div>
   <div
     class="search-container"
+    role="search"
   >
+    <span
+      aria-hidden="true"
+      class="search-icon"
+    >
+      <svg
+        fill="none"
+        height="20"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="20"
+      >
+        <circle
+          cx="11"
+          cy="11"
+          r="8"
+        />
+        <line
+          x1="21"
+          x2="16.65"
+          y1="21"
+          y2="16.65"
+        />
+      </svg>
+    </span>
     <input
+      aria-label="Search for gifs"
       placeholder="Search..."
       type="text"
       value=""
     />
     <button
       class="search-button"
+      type="button"
     >
-      Search
+      <span>
+        Search
+      </span>
+      <svg
+        aria-hidden="true"
+        fill="none"
+        height="16"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="16"
+      >
+        <polyline
+          points="9 18 15 12 9 6"
+        />
+      </svg>
     </button>
   </div>
 </div>

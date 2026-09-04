@@ -1,21 +1,17 @@
 import type { FC } from 'react';
 import type { Gif } from '../interfaces/gif.interface';
+import { GifCard } from './GifCard';
 
 interface Props {
   gifs: Gif[];
+  onGifClick: (gif: Gif) => void;
 }
 
-export const GifList: FC<Props> = ({ gifs }) => {
+export const GifList: FC<Props> = ({ gifs, onGifClick }) => {
   return (
     <div className="gifs-container">
       {gifs.map((gif) => (
-        <div className="gif-card" key={gif.id}>
-          <img src={gif.url} alt={gif.title} />
-          <h3>{gif.title}</h3>
-          <p>
-            {gif.width} x {gif.height} (1.5mb)
-          </p>
-        </div>
+        <GifCard key={gif.id} gif={gif} onClick={onGifClick} />
       ))}
     </div>
   );
