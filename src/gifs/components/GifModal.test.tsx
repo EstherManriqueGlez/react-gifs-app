@@ -27,7 +27,7 @@ describe('GifModal', () => {
     expect(screen.getByText('480 × 270')).toBeDefined();
     expect(screen.getByText('Copy URL')).toBeDefined();
     expect(screen.getByText('Open on Giphy')).toBeDefined();
-    expect((screen.getByRole('img') as HTMLImageElement).src).toBe(mockGif.url);
+    expect(screen.getByRole('img').getAttribute('src')).toBe(mockGif.url);
   });
 
   test('should close when clicking the overlay backdrop', () => {
@@ -60,12 +60,37 @@ describe('GifModal', () => {
     expect(await screen.findByText('Copied!')).toBeDefined();
   });
 
-  test('should link out to Giphy with safety attributes', () => {
+  test('should trap focus within the dialog', () => {
     render(<GifModal gif={mockGif} onClose={() => {}} />);
 
-    const link = screen.getByRole('link', { name: 'Open on Giphy' }) as HTMLAnchorElement;
-    expect(link.href).toBe(mockGif.giphyUrl);
-    expect(link.target).toBe('_blank');
-    expect(link.rel).toContain('noopener');
+    const closeButton = screen.getByRole('button', { name: 'Close' });
+    const copyButton = screen.getByRole('button', { name: 'Copy URL' });
+    const giphyLink = screen.getByRole('link', { name: 'Open on Giphy' });
+
+    // The close button receives focus when the modal opens.
+    expect(document.activeElement).toBe(closeButton);
+
+    fireEvent.keyDown(document, { key: 'Tab' });
+    expect(document.activeElement).toBe(copyButton);
+
+    fireEvent.keyDown(document, { key: 'Tab' });
+    expect(document.activeElement).toBe(giphyLink);
+
+    // Tab past the last element wraps to the first.
+    fireEvent.keyDown(document, { key: 'Tab' });
+    expect(document.activeElement).toBe(closeButton);
+
+    // Shift+Tab from the first element wraps to the last.
+    fireEvent.keyDown(document, { key: 'Tab', shiftKey: true });
+    expect(document.activeElement).toBe(giphyLink);
+  });
+
+  test('should link out to Giphy with safety attributes', () => {
+    render(<GifModal gif={mockGif} onClose={() => {}} />);
+const link = screen.getByRole('link', { name: 'Open on Giphy' });
+
+    expect(link.getAttribute('href')).toBe(mockGif.giphyUrl);
+    expect(link.getAttribute('target')).toBe('_blank');
+    expect(link.getAttribute('rel')).toContain('noopener');
   });
 });

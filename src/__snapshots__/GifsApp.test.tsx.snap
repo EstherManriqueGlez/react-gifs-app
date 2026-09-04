@@ -3,7 +3,7 @@
 exports[`GifsApp > should render component properly 1`] = `
 <div>
   <header
-    class="app-header"
+    class="app-shell app-header"
   >
     <nav
       aria-label="Primary"
@@ -47,114 +47,119 @@ exports[`GifsApp > should render component properly 1`] = `
       </p>
     </div>
   </header>
-  <div
-    class="search-container"
-    role="search"
-  >
-    <span
-      aria-hidden="true"
-      class="search-icon"
-    >
-      <svg
-        fill="none"
-        height="20"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-        width="20"
-      >
-        <circle
-          cx="11"
-          cy="11"
-          r="8"
-        />
-        <line
-          x1="21"
-          x2="16.65"
-          y1="21"
-          y2="16.65"
-        />
-      </svg>
-    </span>
-    <input
-      aria-label="Search for gifs"
-      placeholder="Search for gifs..."
-      type="text"
-      value=""
-    />
-    <button
-      class="search-button"
-      type="button"
-    >
-      <span>
-        Search
-      </span>
-      <svg
-        aria-hidden="true"
-        fill="none"
-        height="16"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-        width="16"
-      >
-        <polyline
-          points="9 18 15 12 9 6"
-        />
-      </svg>
-    </button>
-  </div>
-  <div
-    class="previous-searches"
-  >
-    <h2>
-      Previous Searches
-    </h2>
-    <ul
-      class="previous-searches-list"
-    />
-  </div>
-  <div
-    class="state-card"
-    role="status"
+  <main
+    class="app-shell app-main"
   >
     <div
-      aria-hidden="true"
-      class="state-icon"
+      class="search-container"
+      role="search"
     >
-      <svg
-        fill="none"
-        height="40"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="1.6"
-        viewBox="0 0 24 24"
-        width="40"
+      <span
+        aria-hidden="true"
+        class="search-icon"
       >
-        <circle
-          cx="11"
-          cy="11"
-          r="8"
-        />
-        <line
-          x1="21"
-          x2="16.65"
-          y1="21"
-          y2="16.65"
-        />
-      </svg>
+        <svg
+          fill="none"
+          height="20"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="20"
+        >
+          <circle
+            cx="11"
+            cy="11"
+            r="8"
+          />
+          <line
+            x1="21"
+            x2="16.65"
+            y1="21"
+            y2="16.65"
+          />
+        </svg>
+      </span>
+      <input
+        aria-label="Search for gifs"
+        placeholder="Search for gifs..."
+        type="text"
+        value=""
+      />
+      <button
+        class="search-button"
+        type="button"
+      >
+        <span>
+          Search
+        </span>
+        <svg
+          aria-hidden="true"
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <polyline
+            points="9 18 15 12 9 6"
+          />
+        </svg>
+      </button>
     </div>
-    <h3>
-      Start exploring
-    </h3>
-    <p>
-      Type a keyword and press Enter to discover the perfect GIFs.
+    <p
+      class="visually-hidden"
+      role="status"
+    >
+      Search for GIFs to get started.
     </p>
-  </div>
+    <div
+      aria-busy="false"
+      class="results-region"
+    >
+      <div
+        class="state-card"
+        role="status"
+      >
+        <div
+          aria-hidden="true"
+          class="state-icon"
+        >
+          <svg
+            fill="none"
+            height="40"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.6"
+            viewBox="0 0 24 24"
+            width="40"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="8"
+            />
+            <line
+              x1="21"
+              x2="16.65"
+              y1="21"
+              y2="16.65"
+            />
+          </svg>
+        </div>
+        <h3>
+          Start exploring
+        </h3>
+        <p>
+          Type a keyword and press Enter to discover the perfect GIFs.
+        </p>
+      </div>
+    </div>
+  </main>
 </div>
 `;

@@ -18,7 +18,7 @@ const spotlightTitle = (title: string) => {
 
 export const CustomHeader = ({ title, description }: Props) => {
   return (
-    <header className="app-header">
+    <header className="app-shell app-header">
       <nav className="app-nav" aria-label="Primary">
         <a className="app-brand" href="#">
           <span className="app-brand-mark" aria-hidden="true">

@@ -12,13 +12,48 @@ const COPY_SUCCESS_MS = 1800;
 export const GifModal: FC<Props> = ({ gif, onClose }) => {
   const [copied, setCopied] = useState(false);
   const copyTimer = useRef<number | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!gif) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape') {
+        onClose();
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+
+      const focusable = Array.from(
+        dialog.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+      const currentIndex = active instanceof HTMLElement ? focusable.indexOf(active) : -1;
+
+      event.preventDefault();
+
+      if (event.shiftKey) {
+        const previous = currentIndex <= 0 ? last : focusable[currentIndex - 1];
+        previous.focus();
+      } else {
+        const next =
+          currentIndex === -1 || currentIndex === focusable.length - 1
+            ? first
+            : focusable[currentIndex + 1];
+        next.focus();
+      }
     };
 
     document.addEventListener('keydown', handleKeyDown);
@@ -55,6 +90,7 @@ export const GifModal: FC<Props> = ({ gif, onClose }) => {
 
   return (
     <div
+      ref={dialogRef}
       className="modal-overlay"
       role="dialog"
       aria-modal="true"
@@ -85,7 +121,7 @@ export const GifModal: FC<Props> = ({ gif, onClose }) => {
           <button
             className="modal-action-button modal-action-button--primary"
             type="button"
-            onClick={handleCopyUrl}
+            onClick={() => void handleCopyUrl()}
           >
             {copied ? (
               <>
