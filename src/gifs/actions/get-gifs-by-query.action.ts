@@ -18,6 +18,7 @@ export const getGifsByQuery = async (query: string): Promise<Gif[]> => {
     title: gif.title,
     url: gif.images.original.url,
     previewUrl: gif.images.fixed_width?.url ?? gif.images.original.url,
+    giphyUrl: gif.url ?? `https://giphy.com/gifs/${gif.id}`,
     width: Number(gif.images.original.width),
     height: Number(gif.images.original.height),
   }));
