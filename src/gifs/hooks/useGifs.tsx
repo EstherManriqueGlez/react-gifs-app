@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { getGifsByQuery } from '../actions/get-gifs-by-query.action';
+import type { GifsSearchResult } from '../actions/get-gifs-by-query.action';
 import type { Gif } from '../interfaces/gif.interface';
 import {
   loadPreviousTerms,
@@ -8,14 +9,19 @@ import {
   MAX_PREVIOUS_TERMS,
 } from '../utils/previous-searches';
 
+const PAGE_SIZE = 12;
+
 export const useGifs = () => {
   const [gifs, setGifs] = useState<Gif[]>([]);
   const [previousTerms, setPreviousTerms] = useState<string[]>(loadPreviousTerms);
   const [currentTerm, setCurrentTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // In-memory cache of GIFs keyed by search term.
+  // In-memory cache of GIFs keyed by search term (first page only).
   const gifsCache = useRef<Record<string, Gif[]>>({});
   // Monotonic id used to ignore stale (out-of-order) responses.
   const requestId = useRef(0);
@@ -23,6 +29,11 @@ export const useGifs = () => {
   useEffect(() => {
     savePreviousTerms(previousTerms);
   }, [previousTerms]);
+
+  const applyResult = useCallback((result: GifsSearchResult) => {
+    setTotal(result.total);
+    setHasMore(result.gifs.length < result.total);
+  }, []);
 
   const search = useCallback(async (term: string) => {
     const query = term.toLowerCase().trim();
@@ -32,10 +43,14 @@ export const useGifs = () => {
     const id = ++requestId.current;
     setCurrentTerm(query);
     setError(null);
+    setTotal(0);
+    setHasMore(false);
+    setIsLoadingMore(false);
 
     if (gifsCache.current[query]) {
       setGifs(gifsCache.current[query]);
       setIsLoading(false);
+      setIsLoadingMore(false);
       return;
     }
 
@@ -47,8 +62,9 @@ export const useGifs = () => {
       // Discard the response if a newer search was requested meanwhile.
       if (id !== requestId.current) return;
 
-      gifsCache.current[query] = result;
-      setGifs(result);
+      gifsCache.current[query] = result.gifs;
+      setGifs(result.gifs);
+      applyResult(result);
     } catch {
       if (id !== requestId.current) return;
 
@@ -57,7 +73,36 @@ export const useGifs = () => {
     } finally {
       if (id === requestId.current) setIsLoading(false);
     }
-  }, []);
+  }, [applyResult]);
+
+  const loadMore = useCallback(async () => {
+    if (!currentTerm || isLoading || isLoadingMore || !hasMore) return;
+
+    const offset = gifs.length;
+    const id = ++requestId.current;
+    setIsLoadingMore(true);
+
+    try {
+      const result = await getGifsByQuery(currentTerm, { limit: PAGE_SIZE, offset });
+
+      // Discard the response if a newer search was requested meanwhile.
+      if (id !== requestId.current) return;
+
+      setGifs((prev) => {
+        const seen = new Set(prev.map((gif) => gif.id));
+        const fresh = result.gifs.filter((gif) => !seen.has(gif.id));
+        return [...prev, ...fresh];
+      });
+      setTotal(result.total);
+      setHasMore(offset + result.gifs.length < result.total);
+    } catch {
+      if (id !== requestId.current) return;
+
+      setError('Something went wrong while loading more. Please try again.');
+    } finally {
+      if (id === requestId.current) setIsLoadingMore(false);
+    }
+  }, [currentTerm, gifs.length, hasMore, isLoading, isLoadingMore]);
 
   const handleSearch = useCallback(
     (term: string) => {
@@ -87,10 +132,14 @@ export const useGifs = () => {
     previousTerms,
     currentTerm,
     isLoading,
+    isLoadingMore,
+    total,
+    hasMore,
     error,
 
     // Methods or Functions
     handleTermClicked,
     handleSearch,
+    loadMore,
   };
 };

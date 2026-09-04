@@ -1,3 +1,51 @@
+const makeExtraGif = (id: string, title: string, height: string, width: string) => ({
+  type: 'gif',
+  id,
+  url: `https://giphy.com/gifs/${id}`,
+  slug: id,
+  bitly_gif_url: '',
+  bitly_url: '',
+  embed_url: '',
+  username: '',
+  source: '',
+  title,
+  rating: 'g',
+  content_url: '',
+  source_tld: '',
+  source_post_url: '',
+  is_sticker: 0,
+  import_datetime: '',
+  trending_datetime: '',
+  images: {
+    original: {
+      height,
+      width,
+      size: '100000',
+      url: `https://media2.giphy.com/media/${id}/giphy.gif`,
+      mp4_size: '100000',
+      mp4: `https://media2.giphy.com/media/${id}/giphy.mp4`,
+      webp_size: '100000',
+      webp: `https://media2.giphy.com/media/${id}/giphy.webp`,
+      frames: '20',
+      hash: '',
+    },
+    fixed_width: {
+      height: '200',
+      width: '200',
+      size: '100000',
+      url: `https://media2.giphy.com/media/${id}/200w.gif`,
+      mp4_size: '100000',
+      mp4: `https://media2.giphy.com/media/${id}/200w.mp4`,
+      webp_size: '100000',
+      webp: `https://media2.giphy.com/media/${id}/200w.webp`,
+    },
+  },
+  analytics_response_payload: '',
+  analytics: { onload: { url: '' }, onclick: { url: '' }, onsent: { url: '' } },
+  alt_text: '',
+  is_low_contrast: false,
+});
+
 export const giphySearchResponseMock = {
   data: [
     {
@@ -1986,6 +2034,8 @@ export const giphySearchResponseMock = {
       alt_text: '',
       is_low_contrast: false,
     },
+  makeExtraGif('expandOne', 'matrix GIF', '200', '200'),
+    makeExtraGif('expandTwo', 'excited GIF', '280', '300'),
   ],
   meta: {
     status: 200,
@@ -1994,7 +2044,7 @@ export const giphySearchResponseMock = {
   },
   pagination: {
     total_count: 309,
-    count: 10,
+    count: 12,
     offset: 0,
   },
 };

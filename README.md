@@ -12,8 +12,9 @@ and jump straight to Giphy.
   `localStorage` (max 8) rendered as clickable chips.
 - **Stale-response cancellation** — the latest query always wins, even if an earlier request
   resolves later.
-- **Full result states** — responsive grid with lazy-loaded cards, skeleton shimmer loading,
-  a friendly empty state, and an error state with a "Try again" action.
+- **Full result states** — square, uniform cards in a responsive grid, lazy loading, skeleton
+  shimmer, pagination with a **Load more** button, a friendly empty state, and an error state
+  with a "Try again" action.
 - **Lightbox** — open any GIF with **Copy URL** (inline "Copied!" feedback), **Open on Giphy**,
   close via Esc, overlay click or the ✕ button, with scroll lock and a focus trap.
 - **Accessibility-minded** — `role="status"` live region, landmarks, visible focus states,
@@ -89,9 +90,10 @@ tests/
 
 ## Testing
 
-The suite (37 tests across 8 files) covers the search flow, caching, stale-response handling,
-history persistence, and component behavior. The action layer is mocked with `vi.mock`, so tests
-are **deterministic and run offline** — no network or real API key required.
+The suite (48 tests across 9 files) covers the search flow, pagination (`loadMore`), caching,
+stale-response handling, history persistence, and component behavior. The action layer is mocked
+with `vi.mock`, so tests are **deterministic and run offline** — no network or real API key
+required.
 
 ## Acknowledgments
 

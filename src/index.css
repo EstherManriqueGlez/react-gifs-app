@@ -348,7 +348,7 @@ a {
    ============================================================ */
 .gifs-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: 16px;
   width: 100%;
   max-width: 1200px;
@@ -377,13 +377,14 @@ a {
 .gif-media {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
   border-radius: var(--radius);
   overflow: hidden;
   background: rgba(255, 255, 255, 0.04);
 }
 
 .gif-media img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -420,22 +421,22 @@ a {
   letter-spacing: 0.4px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 600px) {
+  .gifs-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 980px) {
   .gifs-container {
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
   .gifs-container {
     grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-@media (min-width: 1280px) {
-  .gifs-container {
-    grid-template-columns: repeat(5, 1fr);
   }
 }
 
@@ -484,6 +485,56 @@ img.loaded {
 @keyframes shimmer {
   to {
     background-position: -200% 0;
+  }
+}
+
+/* ============================================================
+   Load more
+   ============================================================ */
+.load-more {
+  display: flex;
+  justify-content: center;
+  margin: -56px 0 72px;
+}
+
+.load-more-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 30px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  transition: transform var(--transition), border-color var(--transition), background var(--transition);
+}
+
+.load-more-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: var(--accent-violet);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.load-more-button:disabled {
+  cursor: default;
+  opacity: 0.9;
+}
+
+.load-more-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: var(--text);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 

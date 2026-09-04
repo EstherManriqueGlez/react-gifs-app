@@ -5,6 +5,7 @@ import { SearchBar } from './shared/components/SearchBar';
 import { PreviousSearches } from './gifs/components/PreviousSearches';
 import { GifList } from './gifs/components/GifList';
 import { GifGridSkeleton } from './gifs/components/GifGridSkeleton';
+import { LoadMoreButton } from './gifs/components/LoadMoreButton';
 import { GifEmptyState } from './gifs/components/GifEmptyState';
 import { GifErrorState } from './gifs/components/GifErrorState';
 import { GifModal } from './gifs/components/GifModal';
@@ -17,9 +18,13 @@ export const GifsApp = () => {
     previousTerms,
     currentTerm,
     isLoading,
+    isLoadingMore,
+    hasMore,
+    total,
     error,
     handleTermClicked,
     handleSearch,
+    loadMore,
   } = useGifs();
 
   const [selectedGif, setSelectedGif] = useState<Gif | null>(null);
@@ -30,7 +35,8 @@ export const GifsApp = () => {
     if (error) return `Search failed: ${error}`;
     if (isLoading && hasSearched) return `Loading GIFs for "${currentTerm}"`;
     if (hasSearched && gifs.length > 0) {
-      return `Found ${gifs.length} ${gifs.length === 1 ? 'GIF' : 'GIFs'} for "${currentTerm}"`;
+      const count = total > gifs.length ? `${gifs.length} of ${total}` : `${gifs.length}`;
+      return `Found ${count} ${gifs.length === 1 ? 'GIF' : 'GIFs'} for "${currentTerm}"`;
     }
     if (hasSearched) return `No GIFs found for "${currentTerm}"`;
     return 'Search for GIFs to get started.';
@@ -41,7 +47,7 @@ export const GifsApp = () => {
       return <GifGridSkeleton />;
     }
 
-    if (error) {
+    if (error && gifs.length === 0) {
       return <GifErrorState message={error} onRetry={() => handleSearch(currentTerm)} />;
     }
 
@@ -49,7 +55,12 @@ export const GifsApp = () => {
       return <GifEmptyState hasSearched={hasSearched} term={currentTerm} />;
     }
 
-    return <GifList gifs={gifs} onGifClick={setSelectedGif} />;
+    return (
+      <>
+        <GifList gifs={gifs} onGifClick={setSelectedGif} />
+        <LoadMoreButton onLoadMore={() => void loadMore()} isLoading={isLoadingMore} hasMore={hasMore} />
+      </>
+    );
   };
 
   return (
@@ -59,7 +70,7 @@ export const GifsApp = () => {
         description="Discover and share the perfect Gifs"
       />
 
-      <main className="app-main">
+      <main className="app-shell app-main">
         <SearchBar
           placeholder="Search for gifs..."
           onQuery={(query: string) => handleSearch(query)}

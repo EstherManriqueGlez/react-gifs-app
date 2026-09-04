@@ -3,7 +3,7 @@
 exports[`GifsApp > should render component properly 1`] = `
 <div>
   <header
-    class="app-header"
+    class="app-shell app-header"
   >
     <nav
       aria-label="Primary"
@@ -48,7 +48,7 @@ exports[`GifsApp > should render component properly 1`] = `
     </div>
   </header>
   <main
-    class="app-main"
+    class="app-shell app-main"
   >
     <div
       class="search-container"
