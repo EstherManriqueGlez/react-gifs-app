@@ -100,3 +100,7 @@ required.
 - [Giphy API](https://developers.giphy.com/) — GIF search and media URLs.
 - [Montserrat Alternates](https://fonts.google.com/specimen/Montserrat+Alternates) and
   [Sora](https://fonts.google.com/specimen/Sora) from Google Fonts.
+
+## Notes
+
+It was created for learning purposes following the [Udemy](https://www.udemy.com).
