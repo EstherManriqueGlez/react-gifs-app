@@ -103,4 +103,4 @@ required.
 
 ## Notes
 
-It was created for learning purposes following the [Udemy](https://www.udemy.com).
+This project was created for learning purposes, following a Udemy course on React development to put React, TypeScript, and modern frontend tooling into practice.
